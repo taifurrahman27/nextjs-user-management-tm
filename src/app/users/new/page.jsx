@@ -19,6 +19,36 @@ import {
 } from "@gravity-ui/icons";
 
 const AddNewUser = () => {
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const newUsers = Object.fromEntries(formData.entries());
+
+        console.log(newUsers, "New users");
+
+        try {
+            const res = await fetch("http://localhost:5000/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newUsers),
+            });
+
+            const data = await res.json();
+
+            console.log(data, "Created User");
+
+            if (data.success) {
+                alert("User added successfully!");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <section className="relative min-h-screen overflow-hidden bg-[#070B14] px-4 py-16 flex items-center justify-center">
 
@@ -57,7 +87,8 @@ const AddNewUser = () => {
                             </p>
                         </div>
 
-                        <Form className="mt-10">
+                        <Form className="mt-10"
+                            onSubmit={onSubmit}>
                             <Fieldset className="w-full border-none p-0 m-0">
                                 <FieldGroup className="space-y-5">
 
